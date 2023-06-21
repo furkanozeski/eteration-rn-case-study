@@ -1,3 +1,26 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@Components/CompositeComponents/*":[
+        "src/Components/CompositeComponents/*"
+      ],
+      "@Components/UIComponents/*":[
+        "src/Components/UIComponents/*"
+      ],
+      "@Asset/*":[
+        "src/Asset/*"
+      ],
+      "@Context/*":[
+        "src/Context/*"
+      ],
+      "@Navigation/*":[
+        "src/Navigation/*"
+      ],
+      "@Screens/*":[
+        "src/Screens/*"
+      ],
+    }
+  }
 }
