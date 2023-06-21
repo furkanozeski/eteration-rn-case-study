@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import testAlias from '@Screens/testpathalias';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -61,6 +62,8 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  testAlias();
 
   return (
     <SafeAreaView style={backgroundStyle}>
