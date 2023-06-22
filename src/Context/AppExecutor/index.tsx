@@ -25,7 +25,7 @@ export const AppExecutor = ({children}: {children: React.ReactNode}) => {
         dispatch({type: 'GetProduct'});
       } else {
         setProduct(productData);
-        setIsDataLoaded(true)
+        setIsDataLoaded(true);
       }
       return () => {};
     }, [productData, dispatch]);

@@ -6,6 +6,7 @@ export type FilterSortItemTypes = {
   isRadioButton: Boolean | boolean;
   enumNumber?: number;
   productData?: ProductData,
+  isSelected: boolean,
   onRadioButtonPress?: ((data: number) => void | undefined);
   onCheckBoxPress?: ((data: ProductData) => void | undefined);
 };

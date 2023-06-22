@@ -48,7 +48,7 @@ export const style = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     lineHeight: 17,
-    marginBottom: 15,
+    marginBottom: 3,
     marginLeft: 14,
   },
   sortItemContainerStyle: {
