@@ -6,7 +6,7 @@ import RadioButtonIcon from 'react-native-vector-icons/Ionicons';
 import CheckboxIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const FilterSortItem = (props: FilterSortItemTypes) => {
-  const {label, isRadioButton, onPress} = props;
+  const {label, isRadioButton, enumNumber, productData, onRadioButtonPress, onCheckBoxPress} = props;
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
@@ -14,7 +14,7 @@ export const FilterSortItem = (props: FilterSortItemTypes) => {
       {isRadioButton ? (
         <>
           <TouchableOpacity
-            onPress={() => (typeof onPress === 'function' ? onPress() : null)}>
+            onPress={() => (typeof onRadioButtonPress === 'function' ? onRadioButtonPress(enumNumber!!) : null)}>
             <RadioButtonIcon
               name={'radio-button-off-outline' || 'radio-button-on-outline'}
               size={18}
@@ -25,7 +25,7 @@ export const FilterSortItem = (props: FilterSortItemTypes) => {
       ) : (
         <>
           <TouchableOpacity
-            onPress={() => (typeof onPress === 'function' ? onPress() : null)}>
+            onPress={() => (typeof onCheckBoxPress === 'function' ? onCheckBoxPress(productData!!) : null)}>
             <CheckboxIcon
               name={'checkbox-blank-outline' || 'checkbox-marked'}
               size={18}

@@ -1,11 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
-import { mockData } from '@root/mockdata';
+import React from 'react';
 import { Text, TouchableOpacity,  Modal, View, FlatList} from 'react-native';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import { FilterSortItem } from './FilterSortItem';
 import { style } from './style';
-
+import { Props } from '@root/src/Types/FilterType/FilterModelProps';
 
 const FilterSortByItems = [
   {label: 'Old to new', enum: 0},
@@ -14,18 +13,19 @@ const FilterSortByItems = [
   {label: 'Price low to high', enum: 3},
 ];
 
-
-
-export const FilterModelComponent = () => {
+export const FilterModelComponent = (props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const {isVisible, productData, onRequestClose, onSelectFilter, onSelectBrand, onSelectModel} = props;
   return (
-    <Modal visible={modalVisible}>
+    <Modal
+      visible={isVisible}
+      onRequestClose={onRequestClose}
+      animationType="slide"
+    >
       <View style={style.modalContainer}>
         <View
           style={style.modalHeaderContainer}>
-          <TouchableOpacity style={{}}>
+          <TouchableOpacity style={{}} onPress={onRequestClose}>
             <CloseIcon name={'close'} size={36} color={'black'} />
           </TouchableOpacity>
           <Text
@@ -44,8 +44,9 @@ export const FilterModelComponent = () => {
               key={itemData.enum}
               label={itemData.label}
               isRadioButton={true}
-              onPress={() => {
-                console.log('tikladin simdi');
+              enumNumber={itemData.enum}
+              onRadioButtonPress={(data) => {
+                onSelectFilter(data);
               }}
             />
           ))}
@@ -57,14 +58,15 @@ export const FilterModelComponent = () => {
           Brand
         </Text>
         <FlatList
-          data={mockData}
+          data={productData}
           renderItem={({item}) => (
             <FilterSortItem
               key={item.id}
               label={item.brand}
               isRadioButton={false}
-              onPress={() => {
-                console.log('tikladin simdi');
+              productData={item}
+              onCheckBoxPress={(data) => {
+                onSelectBrand(data);
               }}
             />
           )}
@@ -78,14 +80,15 @@ export const FilterModelComponent = () => {
           Model
         </Text>
         <FlatList
-          data={mockData}
+          data={productData}
           renderItem={({item}) => (
             <FilterSortItem
               key={item.id}
-              label={item.brand}
+              label={item.model}
               isRadioButton={false}
-              onPress={() => {
-                console.log('tikladin simdi');
+              productData={item}
+              onCheckBoxPress={(data) => {
+                onSelectModel(data);
               }}
             />
           )}
@@ -93,7 +96,10 @@ export const FilterModelComponent = () => {
           style={style.flatListStyle}
         />
         <TouchableOpacity
-          style={style.applyButtonStyle}>
+          style={style.applyButtonStyle}
+          onPress={() => {
+          }}
+        >
           <Text
             style={style.applyButtonTextStyle}>
             Apply
