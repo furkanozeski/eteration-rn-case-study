@@ -1,19 +1,19 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
-import {Text, TouchableOpacity, Modal, View, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, Modal, View, FlatList } from 'react-native';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
-import {FilterSortItem} from './FilterSortItem';
-import {style} from './style';
-import {Props} from '@root/src/Types/FilterType/FilterModelProps';
-import {ProductData} from '@root/src/Types/ProductType/Product';
-import {FilterType} from '@root/src/Types/FilterType/FilterType';
+import { FilterSortItem } from './FilterSortItem';
+import { style } from './style';
+import { Props } from '@root/src/Types/FilterType/FilterModelProps';
+import { ProductData } from '@root/src/Types/ProductType/Product';
+import { FilterType } from '@root/src/Types/FilterType/FilterType';
 import SearchInputBox from '@CompositeComponents/SearchInputBox';
 
 const FilterSortByItems = [
-  {label: 'Old to new', enum: 0},
-  {label: 'New to old', enum: 1},
-  {label: 'Price high to low', enum: 2},
-  {label: 'Price low to high', enum: 3},
+  { label: 'Old to new', enum: 0 },
+  { label: 'New to old', enum: 1 },
+  { label: 'Price high to low', enum: 2 },
+  { label: 'Price low to high', enum: 3 },
 ];
 
 const MODEL_SET = new Set<ProductData>();
@@ -26,7 +26,7 @@ const initialState = {
 };
 
 export const FilterModelComponent = (props: Props) => {
-  const {isVisible, productData, onRequestClose, onApply} = props;
+  const { isVisible, productData, onRequestClose, onApply } = props;
   const prodDataRef = React.useRef([...productData]);
 
   const [selectedItems, setSelectedItems] = useState<FilterType>({
@@ -64,6 +64,47 @@ export const FilterModelComponent = (props: Props) => {
     }
 
   }, [modelText, productData]);
+
+
+  const renderBrandList = ({ item }: { item: ProductData }) => (<FilterSortItem
+    key={item.id}
+    label={item.brand}
+    isRadioButton={false}
+    productData={item}
+    onCheckBoxPress={data => {
+      if (BRAND_SET.has(data)) {
+        BRAND_SET.delete(data);
+      } else {
+        BRAND_SET.add(data);
+      }
+      setSelectedItems({
+        ...selectedItems,
+        brandData: BRAND_SET,
+      });
+    }}
+    isSelected={selectedItems.brandData.has(item)}
+  />);
+
+  const renderModelList = ({ item }: { item: ProductData }) => (
+    <FilterSortItem
+      key={item.id}
+      label={item.model}
+      isRadioButton={false}
+      productData={item}
+      onCheckBoxPress={data => {
+        if (MODEL_SET.has(data)) {
+          MODEL_SET.delete(data);
+        } else {
+          MODEL_SET.add(data);
+        }
+        setSelectedItems({
+          ...selectedItems,
+          modelData: MODEL_SET,
+        });
+      }}
+      isSelected={selectedItems.modelData.has(item)}
+    />
+  );
 
   return (
     <Modal
@@ -125,27 +166,10 @@ export const FilterModelComponent = (props: Props) => {
           }}
         />
         <FlatList
+          initialNumToRender={10}
+          maxToRenderPerBatch={12}
           data={brand}
-          renderItem={({item}) => (
-            <FilterSortItem
-              key={item.id}
-              label={item.brand}
-              isRadioButton={false}
-              productData={item}
-              onCheckBoxPress={data => {
-                if (BRAND_SET.has(data)) {
-                  BRAND_SET.delete(data);
-                } else {
-                  BRAND_SET.add(data);
-                }
-                setSelectedItems({
-                  ...selectedItems,
-                  brandData: BRAND_SET,
-                });
-              }}
-              isSelected={selectedItems.brandData.has(item)}
-            />
-          )}
+          renderItem={renderBrandList}
           keyExtractor={item => item.id}
           style={style.flatListStyle}
         />
@@ -160,27 +184,10 @@ export const FilterModelComponent = (props: Props) => {
           }}
         />
         <FlatList
+          initialNumToRender={10}
+          maxToRenderPerBatch={12}
           data={model}
-          renderItem={({item}) => (
-            <FilterSortItem
-              key={item.id}
-              label={item.model}
-              isRadioButton={false}
-              productData={item}
-              onCheckBoxPress={data => {
-                if (MODEL_SET.has(data)) {
-                  MODEL_SET.delete(data);
-                } else {
-                  MODEL_SET.add(data);
-                }
-                setSelectedItems({
-                  ...selectedItems,
-                  modelData: MODEL_SET,
-                });
-              }}
-              isSelected={selectedItems.modelData.has(item)}
-            />
-          )}
+          renderItem={renderModelList}
           keyExtractor={item => item.id}
           style={style.flatListStyle}
         />
