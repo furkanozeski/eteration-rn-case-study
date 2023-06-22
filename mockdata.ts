@@ -2,7 +2,8 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-export const mockData = [
+import { ProductData } from "./src/Types/ProductType/Product";
+export const mockData: ProductData[] = [
     {
       "createdAt": "2022-03-30T05:50:53.201Z",
       "name": "Polestar Golf",

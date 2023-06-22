@@ -10,10 +10,11 @@ export const ProductCardItem = (props: {
   price: String;
   name: String;
   image: string;
-  id: String | string;
-  onPress: (id: String | string) => void
+  isFavorite: boolean;
+  onPress: () => void;
+  onAddToCard: () => void
 }) => {
-  const { price, name, image, onPress, id } = props;
+  const { price, name, image, isFavorite, onPress, onAddToCard } = props;
 
   return (
     <View style={style.productCardItemContainerStyle}>
@@ -27,11 +28,11 @@ export const ProductCardItem = (props: {
           style={{position: 'absolute', right: 4, top: 6}}
           onPress={() => {
             if (typeof onPress === 'function') {
-              onPress(id);
+              onPress();
             }
           }}
         >
-          <FavoriteIcon color={'#FFB800'}/>
+          <FavoriteIcon color={isFavorite ? '#FFB800' : 'gray'}/>
         </TouchableOpacity>
       </View>
       <View
@@ -46,8 +47,9 @@ export const ProductCardItem = (props: {
         </Text>
       </View>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={style.buttonStyle}
+        onPress={() => typeof onAddToCard === 'function' ? onAddToCard() : null}
       >
         <Text style={style.buttonTextStyle}>Add to Cart</Text>
       </TouchableOpacity>

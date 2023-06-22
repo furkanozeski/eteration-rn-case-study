@@ -1,14 +1,9 @@
 /* eslint-disable prettier/prettier */
+import { FilterSortItemTypes } from '@root/src/Types/FilterType/FilterSortItemTypes';
 import React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native';
 import RadioButtonIcon from 'react-native-vector-icons/Ionicons';
 import CheckboxIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-type FilterSortItemTypes = {
-  label: string | String;
-  isRadioButton: Boolean | boolean;
-  onPress: () => void;
-};
 
 export const FilterSortItem = (props: FilterSortItemTypes) => {
   const {label, isRadioButton, onPress} = props;

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Home } from './TabNavGraph';
+import { TabBar } from './TabNavGraph';
 import { TopLevelDestionations } from '@Routes/TopLevelDestinations';
 
 const Stack = createNativeStackNavigator();
@@ -19,7 +19,7 @@ export default function NavigationHost() {
     >
         <Stack.Screen
           name={TopLevelDestionations.Home}
-          component={Home}
+          component={TabBar}
           options={{
             headerShown: true,
             headerStyle: {

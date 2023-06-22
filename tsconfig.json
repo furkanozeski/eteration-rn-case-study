@@ -3,30 +3,42 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@Asset/*":[
+        "src/Asset/*"
+      ],
       "@CompositeComponents/*":[
         "src/Components/CompositeComponents/*"
       ],
       "@UIComponents/*":[
         "src/Components/UIComponents/*"
       ],
-      "@Asset/*":[
-        "src/Asset/*"
-      ],
       "@Context/*":[
         "src/Context/*"
+      ],
+      "@Hooks/*":[
+        "src/Hooks/*"
       ],
       "@Navigation/*":[
         "src/Navigation/*"
       ],
+      "@Routes/*":[
+        "src/Routes/*"
+      ],
+      "@Saga/*":[
+        "src/Saga/*"
+      ],
       "@Screens/*":[
         "src/Screens/*"
       ],
+      "@Service/*":[
+        "src/Service/*"
+      ],
+      "@Store/*":[
+        "src/Store/*"
+      ],
       "@root/*":[
         "./*"
-      ],
-      "@Routes/*":[
-        "src/Routes/*"
-      ]
+      ],      
     }
   }
 }

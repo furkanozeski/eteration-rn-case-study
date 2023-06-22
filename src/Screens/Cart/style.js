@@ -5,8 +5,8 @@ export const style = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: 'white',
-    marginHorizontal: 16,
-    marginVertical: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
   },
   secondaryContainer: {
     justifyContent: 'space-between',
@@ -20,6 +20,7 @@ export const style = StyleSheet.create({
   cartItemMainContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   productNameText: {
     fontWeight: '500',
@@ -88,5 +89,16 @@ export const style = StyleSheet.create({
     fontWeight: '400',
     textAlign: 'center',
     paddingHorizontal: 30,
+  },
+  loaderContainerViewStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  emptyCartTextStyle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 10,
   },
 });

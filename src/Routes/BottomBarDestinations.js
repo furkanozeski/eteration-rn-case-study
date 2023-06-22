@@ -6,20 +6,24 @@ export const BottomBarDestinations = {
         details: 'details',
         favorite: 'favorite',
     },
+    title: 'Home',
   },
   Cart: {
     route: 'cart',
     destinations: {
         details: 'details',
     },
+    title: 'Cart',
   },
   Favorite:{
     route: 'favorite',
     destinations: {
         details: 'details',
     },
+    title: 'Favorite',
   },
   User: {
     route: 'user',
+    title: 'User',
   },
 };
