@@ -11,20 +11,24 @@ const sagaMiddleWare = createSagaMiddleware();
 
 const persistConfig = {
   storage: AsyncStorage,
+  version: 1,
   key: 'root',
+  blacklist: ['product'],
 };
 
-export const persistReducerCart = persistReducer(persistConfig, cartSlice);
-export const persistReducerFavorite = persistReducer(persistConfig, FavoriteReducer);
-
 const rootReducer = combineReducers({
-  cart: persistReducerCart,
-  favorite: persistReducerFavorite,
+  cart: cartSlice,
+  favorite: FavoriteReducer,
   product: productReducer,
 });
 
+
+export const persistReducers = persistReducer(persistConfig, rootReducer);
+
+
+
 export const store = configureStore({
-    reducer: rootReducer,
+    reducer: persistReducers,
     middleware: [sagaMiddleWare],
     // middleware: (getDefaultMiddleware) =>  getDefaultMiddleware({ thunk: false }).prepend(sagaMiddleWare),
 });

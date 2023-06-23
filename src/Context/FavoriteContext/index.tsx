@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { useAppDispatch, useAppSelector } from '@Hooks/hooks';
-import { SetFavorite } from '@Store/Reducer/FavoriteReducer';
+import { AddFavorite } from '@Store/Reducer/FavoriteReducer';
 import { ProductData } from '@root/src/Types/ProductType/Product';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 type SaveProviderModel = {
   add: (product: ProductData) => void,
@@ -21,33 +21,22 @@ export const FavoriteSaveContext = React.createContext<SaveProviderModel>({
 
 export const FavoriteContextProvider = ({children}: {children: React.ReactNode}) => {
   const [favorite, setFavorite] = React.useState<ProductData[]>([]);
-  const dispatch = useAppDispatch();
-  const favoriteFromStore = useAppSelector((select) => select.favorite);
-
+  const dispatch = useDispatch();
   const removeFromFavorite = React.useCallback(
     (product: ProductData) => {
       const newFavorite = favorite.filter(e => e.id !== product.id);
-      if (newFavorite !== null || newFavorite !== undefined) {
+      if (newFavorite !== null && newFavorite !== undefined) {
         setFavorite([...newFavorite]);
-        dispatch(SetFavorite(favorite));
-      } else {
       }
     },
-    [setFavorite, favorite, dispatch],
+    [setFavorite, favorite],
   );
 
   const addToFavorite = React.useCallback(
     (product: ProductData) => {
-      const hasValue = favorite.filter((e) => e.id === product.id);
-      if (Array.isArray(hasValue) && hasValue.length > 0) {
-        setFavorite([{...product}, ...favorite]);
-        removeFromFavorite(product);
-      } else {
-        setFavorite([{...product}, ...favorite]);
-        // dispatch(SetFavorite(favorite));
-      }
+      dispatch(AddFavorite(product));
     },
-    [setFavorite, favorite, removeFromFavorite,dispatch],
+    [dispatch],
   );
 
 

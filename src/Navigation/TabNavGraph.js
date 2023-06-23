@@ -22,8 +22,7 @@ export function TabBar() {
   const cartData = useSelector((state) => state.cart.totalCount);
   const [badge, setBadge] = React.useState(cartData)
 
-  React.useEffect(() => {setBadge(cartData)}, [cartData])
-  console.log(badge);
+  React.useEffect(() => {setBadge(cartData)}, [cartData]);
   return (
     <Tab.Navigator
       screenOptions={{

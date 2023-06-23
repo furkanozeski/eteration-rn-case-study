@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { mockData } from '@root/mockdata';
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import { style } from './style';
-import { useDispatch } from 'react-redux';
 import { useAppDispatch } from '@Hooks/hooks';
 import { AddToCart } from '@Store/Reducer/CartReducer';
+import CloseIcon from 'react-native-vector-icons/AntDesign';
+import { FavoriteIcon } from '@Asset/Icon/Icon';
 
 export default function DetailScreen({route}) {
   const {data} = route.params;
@@ -25,6 +25,9 @@ export default function DetailScreen({route}) {
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{flex: 1}}
             />
+            <View  style={{position: 'absolute', right: 4, top: 6}}>
+              <FavoriteIcon color={data.isFavorite ? '#FFB800' : 'gray'}/>
+            </View>
         </View>
       <Text style={style.productNameStye}>
         {data.name}

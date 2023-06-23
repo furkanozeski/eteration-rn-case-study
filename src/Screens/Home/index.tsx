@@ -5,15 +5,15 @@ import { FlatList, SafeAreaView, View } from 'react-native';
 import SearchInputBox from '@CompositeComponents/SearchInputBox/index';
 import { FilterItem } from '@UIComponents/FilterItem/FilterItem';
 import { ProductCardItem } from '@UIComponents/ProductCardItem/ProductCardItem';
-import { useFavoriteSave, useFavoriteState } from '@Context/FavoriteContext';
 import { FilterModelComponent } from '@UIComponents/FilterItem/FilterModelComponent';
 import { AddToCart } from '@root/src/Store/Reducer/CartReducer';
-import { useAppDispatch } from '@Hooks/hooks';
+import { useAppDispatch, useAppSelector } from '@Hooks/hooks';
 import { useAppData } from '@Context/AppExecutor';
 import { FilterType } from '@root/src/Types/FilterType/FilterType';
 import { ProductData } from '@root/src/Types/ProductType/Product';
 import { FilterEnum } from '@root/src/Types/FilterType/FilterEnum';
 import { BottomBarDestinations } from '@Routes/BottomBarDestinations';
+import { HandleFavorite } from '@Store/Reducer/FavoriteReducer';
 import { Loading } from '@UIComponents/ActivityIndicatorItem';
 
 const filterDataDispatcher = (data: FilterType, product: ProductData[]): ProductData[] => {
@@ -75,11 +75,9 @@ const filterDataByModel = (dataTobeSorted: Set<ProductData>, product: ProductDat
   return newValue;
 };
 
-function HomeScreen({ navigation }) {
+function HomeScreen({navigation}) {
   const dispatch = useAppDispatch();
-
-  const { add } = useFavoriteSave();
-  const favorite = useFavoriteState();
+  const favorite = useAppSelector((s) => s.favorite);
   const { productData } = useAppData();
   const appDataRef = React.useRef(productData);
   const sortDataRef = React.useRef<ProductData[]>([]);
@@ -87,8 +85,9 @@ function HomeScreen({ navigation }) {
   const [product, setProduct] = React.useState(appDataRef.current);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [sortedData, setSortedData] = useState<ProductData[]>();
+  const [searchText, setSearchText] = useState<string>('');
   const [onEnd, setOnEnd] = useState(12);
-  const [isEnd, setIsEnd] = useState(false);
+  const [isEnd, setIsEnd] = useState(onEnd === product.length);
 
   React.useEffect(() => {
     if (Array.isArray(favorite) && favorite.length > 0) {
@@ -97,12 +96,12 @@ function HomeScreen({ navigation }) {
         isFavorite: favorite.find((el) => el.id === data.id)?.isFavorite ?? false,
       }));
       setProduct(valueInProduct);
-      appDataRef.current = valueInProduct;
     } else {
       setProduct(appDataRef.current);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [favorite]);
+  console.log(favorite);
 
   React.useEffect(() => {
     if (sortedData !== undefined && sortedData.length > 0) {
@@ -110,83 +109,74 @@ function HomeScreen({ navigation }) {
     }
   }, [sortedData]);
 
-  const sort = React.useCallback((text: string) => {
-      if (text === '' && !Array.isArray(sortedData)) {
-        setProduct([...appDataRef.current]);
-      } else {
-        setProduct([...sortDataRef.current]);
-      }
+  React.useEffect(() => {
+    if (searchText === '' && !Array.isArray(sortedData)) {
+      setProduct([...appDataRef.current]);
+    } else {
+      setProduct([...sortDataRef.current]);
+    }
 
-      if (text !== '' && Array.isArray(sortedData) && sortedData.length > 0) {
-        const newValue = [...sortedData].filter((element) => element.name.toLocaleLowerCase().includes(text));
-        setProduct(newValue);
-        return;
-      }
-      if (text !== '' && !Array.isArray(sortedData)) {
-        const newValue = [...product].filter((element) => element.name.toLocaleLowerCase().includes(text));
-        setProduct(newValue);
-        return;
-      }
-    },
-  [product, sortedData]);
+    if (searchText !== '' && Array.isArray(sortedData) && sortedData.length > 0) {
+      const newValue = [...sortedData].filter((element) => element.name.toLocaleLowerCase().includes(searchText));
+      setProduct(newValue);
+      return;
+    }
+    if (searchText !== '' && !Array.isArray(sortedData)) {
+      const newValue = [...product].filter((element) => element.name.toLocaleLowerCase().includes(searchText));
+      setProduct(newValue);
+      return;
+    }
 
-  const renderItem = React.useCallback(({ item }: {item: ProductData}) => (
-    <>
-      <ProductCardItem
-        price={item.price}
-        name={item.name}
-        image={item.image}
-        isFavorite={item.isFavorite}
-        onPress={() => {
-          const newItem = {
-            ...item,
-            isFavorite: !item.isFavorite,
-          };
-          add(newItem);
-        }}
-        onAddToCard={() => {
-          dispatch(AddToCart(item));
-        }}
-        onPressToImage={() => {
-          navigation.navigate(
-            BottomBarDestinations.Home.destinations.details,
-            {
-              data: item,
-            }
-          );
-        }}
-      />
-      <View style={{ marginRight: 5 }} />
-    </>
-  ), [add, dispatch, navigation])
-console.log(onEnd);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortedData, searchText]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <SearchInputBox shouldScaleViaStyle={false} onChangeText={(text) => { sort(text)}} />
+      <SearchInputBox shouldScaleViaStyle={false} onChangeText={(text) => { setSearchText(text); }} />
       <FilterItem
         onPressFilter={() => {
           setModalVisible(true);
         }}
+
       />
       <FlatList
         data={product.slice(0, Math.min(onEnd, product.length))}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <>
+            <ProductCardItem
+              price={item.price}
+              name={item.name}
+              image={item.image}
+              isFavorite={item.isFavorite}
+              onPress={() => {
+                dispatch(HandleFavorite(item));
+              }}
+              onAddToCard={() => {
+                dispatch(AddToCart(item));
+              }}
+              onPressToImage={() => {
+                navigation.navigate(
+                  BottomBarDestinations.Home.destinations.details,
+                  {
+                    data: item,
+                  }
+                );
+              }}
+            />
+            <View style={{ marginRight: 5 }} />
+          </>
+        )}
         keyExtractor={item => item.id}
         numColumns={2}
         contentContainerStyle={{
           justifyContent: 'center',
         }}
         initialNumToRender={12}
-        maxToRenderPerBatch={24}
-        windowSize={24}
-        onEndReached={() => {
-          const newVal = onEnd + 16;
-          if (newVal < product.length) {
-            setOnEnd(newVal);
-          } else {
-            setOnEnd(Math.min(newVal, product.length));
-            setIsEnd(true);
-          }
+        maxToRenderPerBatch={12}
+        onEndReached={(distanceFromEnd) => {
+          console.log(distanceFromEnd);
+          setIsEnd(onEnd === product.length ? true : false);
+          setOnEnd(onEnd + 16);
         }}
         ListFooterComponent={!isEnd ? <Loading /> : null }
         onEndReachedThreshold={0.2}
