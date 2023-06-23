@@ -57,15 +57,9 @@ Due to a lack of resources, this project can only be run on Android. If you want
     ```
 * link dependencies
 
-  ```sh
+```sh
      cd ios && pod install && cd ..
-    ```
-
-
-### Creating A Pull Request
-
-
-
+```
 ## Authors
 
 * **Furkan Özeşki** - *Software Developer* - [Furkan Özeşki](https://github.com/furkanozeski) 
