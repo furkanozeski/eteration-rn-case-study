@@ -21,7 +21,7 @@ export default function NavigationHost() {
           name={TopLevelDestionations.Home}
           component={TabBar}
           options={{
-            headerShown: true,
+            headerShown: false,
             headerStyle: {
               backgroundColor: 'rgba(42, 89, 254, 1)',
             },

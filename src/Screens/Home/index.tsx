@@ -13,6 +13,7 @@ import { useAppData } from '@Context/AppExecutor';
 import { FilterType } from '@root/src/Types/FilterType/FilterType';
 import { ProductData } from '@root/src/Types/ProductType/Product';
 import { FilterEnum } from '@root/src/Types/FilterType/FilterEnum';
+import { BottomBarDestinations } from '@Routes/BottomBarDestinations';
 
 const filterDataDispatcher = (data: FilterType, product: ProductData[]): ProductData[] => {
   let sortedProduct;
@@ -73,9 +74,7 @@ const filterDataByModel = (dataTobeSorted: Set<ProductData>, product: ProductDat
   return newValue;
 };
 
-
-
-function HomeScreen() {
+function HomeScreen({navigation}) {
   const dispatch = useAppDispatch();
 
   const { add } = useFavoriteSave();
@@ -160,6 +159,14 @@ function HomeScreen() {
                   count: 1,
                 };
                 dispatch(AddToCart(newVal));
+              }}
+              onPressToImage={() => {
+                navigation.navigate(
+                  BottomBarDestinations.Home.destinations.details,
+                  {
+                    data: item,
+                  }
+                );
               }}
             />
             <View style={{ marginRight: 5 }} />

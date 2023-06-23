@@ -25,6 +25,7 @@ export const FavoriteContextProvider = ({children}: {children: React.ReactNode})
       const newFavorite = favorite.filter(e => e.id !== product.id);
       if (newFavorite !== null || newFavorite !== undefined) {
         setFavorite([...newFavorite]);
+      } else {
       }
     },
     [setFavorite, favorite],

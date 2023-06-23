@@ -3,8 +3,13 @@ import { mockData } from '@root/mockdata';
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import { style } from './style';
+import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '@Hooks/hooks';
+import { AddToCart } from '@Store/Reducer/CartReducer';
 
-export default function DetailScreen() {
+export default function DetailScreen({route}) {
+  const {data} = route.params;
+  const dispatch = useAppDispatch()
   return (
     <View style={style.mainContainer}>
         <View
@@ -13,7 +18,7 @@ export default function DetailScreen() {
         >
             <Image
                 source={{
-                    uri: mockData[0].image,
+                    uri: data.image,
                 }}
                 resizeMethod="resize"
                 resizeMode="stretch"
@@ -22,18 +27,27 @@ export default function DetailScreen() {
             />
         </View>
       <Text style={style.productNameStye}>
-        {mockData[0].name}
+        {data.name}
       </Text>
       <Text style={style.productDescriptionStye}>
-        {mockData[0].description}
+        {data.description}
       </Text>
 
       <View style={style.bottomLineContainer}>
         <View>
             <Text>Price: </Text>
-            <Text>{mockData[0].price} ₺</Text>
+            <Text>{data.price} ₺</Text>
         </View>
-        <TouchableOpacity style={style.addToCartButtonStyle} >
+        <TouchableOpacity 
+          style={style.addToCartButtonStyle}
+          onPress={() => {
+            const newVal = {
+              ...data,
+              count: 1,
+            };
+            dispatch(AddToCart(newVal));
+          }}
+        >
             <Text style={style.addToCartTextStyle}>Add to Cart</Text>
         </TouchableOpacity>
       </View>

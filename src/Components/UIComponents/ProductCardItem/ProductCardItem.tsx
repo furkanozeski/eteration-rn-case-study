@@ -13,17 +13,22 @@ export const ProductCardItem = (props: {
   isFavorite: boolean;
   onPress: () => void;
   onAddToCard: () => void
+  onPressToImage?: () => void
 }) => {
-  const { price, name, image, isFavorite, onPress, onAddToCard } = props;
+  const { price, name, image, isFavorite, onPress, onAddToCard, onPressToImage } = props;
 
   return (
     <View style={style.productCardItemContainerStyle}>
       <View>
-        <Image
-          source={{ uri: image }}
-          style={style.productCardItemImageStyle}
-          resizeMethod="resize"
-        />
+        <TouchableOpacity
+          onPress={() => typeof onPressToImage === 'function' ? onPressToImage() : null}
+        >
+          <Image
+            source={{ uri: image }}
+            style={style.productCardItemImageStyle}
+            resizeMethod="resize"
+          />
+        </TouchableOpacity>
         <TouchableOpacity 
           style={{position: 'absolute', right: 4, top: 6}}
           onPress={() => {

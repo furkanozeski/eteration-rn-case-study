@@ -9,6 +9,8 @@ import MIcon from  'react-native-vector-icons/MaterialCommunityIcons';
 import Cart from '@Screens/Cart';
 import Favorite from '@Screens/Favorite';
 import { useAppSelector } from '@Hooks/hooks';
+import Account from '@Screens/Account';
+import NestedNav from './NestedNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +34,7 @@ export function TabBar() {
     >
       <Tab.Screen
         name={BottomBarDestinations.Home.route}
-        component={HomeScreen}
+        component={NestedNav}
         options={{
             headerShown: false,
             title: undefined,
@@ -44,8 +46,16 @@ export function TabBar() {
         name={BottomBarDestinations.Cart.route}
         component={Cart}
         options={{
-            headerShown: false,
-            title: undefined,
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: 'rgba(42, 89, 254, 1)',
+            },
+            title: 'E-Market',
+            headerTitleStyle: {
+              color: 'white',
+              fontSize: 29,
+              fontWeight: '800',
+            },
             tabBarIcon: ({ color }) => <MemoizedChartIcon color={color}/>,
             tabBarBadge: cartData > 0 ? cartData : undefined,
             unmountOnBlur: true,
@@ -65,7 +75,7 @@ export function TabBar() {
       />
       <Tab.Screen
         name={BottomBarDestinations.User.route}
-        component={Favorite}
+        component={Account}
         options={{
             headerShown: false,
             title: undefined,

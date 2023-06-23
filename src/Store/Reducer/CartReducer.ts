@@ -19,10 +19,7 @@ export const cartSlice = createSlice({
             state.totalPrice += parseInt(action.payload.price, 10);
             const incomingCartItem = state.products.find(e => e.id === action.payload.id);
             if (incomingCartItem !== undefined) {
-                
                 incomingCartItem.count += 1;
-
-
                 const indexOf = state.products.indexOf(incomingCartItem);
                 state.products.splice(indexOf, indexOf + 1, incomingCartItem);
             } else {
@@ -45,9 +42,15 @@ export const cartSlice = createSlice({
                 state.totalPrice -= parseInt(action.payload.price, 10);
             }
         },
+        SetCartState: (state, action: PayloadAction<CartStore>) => {
+            return {
+                ...state,
+                ...action,
+            };
+        },
     },
 });
 
-export const {AddToCart, RemoveFromChart} = cartSlice.actions;
+export const {AddToCart, RemoveFromChart, SetCartState} = cartSlice.actions;
 
 export default cartSlice.reducer;
