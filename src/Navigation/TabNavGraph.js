@@ -2,7 +2,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { memo } from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '@Screens/Home';
 import { BottomBarDestinations } from '@Routes/BottomBarDestinations';
 import Icon from  'react-native-vector-icons/Ionicons';
 import MIcon from  'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,6 +23,7 @@ export function TabBar() {
   const [badge, setBadge] = React.useState(cartData)
 
   React.useEffect(() => {setBadge(cartData)}, [cartData])
+  console.log(badge);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -45,24 +45,29 @@ export function TabBar() {
         }}
       />
       <Tab.Screen
-        name={BottomBarDestinations.Cart.route}
-        component={Cart}
-        options={{
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: 'rgba(42, 89, 254, 1)',
-            },
-            title: 'E-Market',
-            headerTitleStyle: {
-              color: 'white',
-              fontSize: 29,
-              fontWeight: '800',
-            },
-            tabBarIcon: ({ color }) => <MemoizedChartIcon color={color}/>,
-            tabBarBadge: badge > 0 ? badge : undefined,
-            unmountOnBlur: true,
-        }}
-      />
+          name={BottomBarDestinations.Cart.route}
+          component={Cart}
+          options={{
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: 'rgba(42, 89, 254, 1)',
+              },
+              title: 'E-Market',
+              headerTitleStyle: {
+                color: 'white',
+                fontSize: 29,
+                fontWeight: '800',
+              },
+              tabBarIcon: ({ color }) => <MemoizedChartIcon color={color}/>,
+              tabBarBadge: badge > 0 ? badge : '',
+              tabBarBadgeStyle: {
+                backgroundColor: badge === 0 ? 'white' : 'rgba(42, 89, 254, 1)',
+                zIndex: badge === 0 ? -99 : 99,
+                overflow: badge === 0 ? 'hidden' : undefined,
+              },
+              unmountOnBlur: true,
+          }}
+        />
       <Tab.Screen
         name={BottomBarDestinations.Favorite.route}
         component={Favorite}
