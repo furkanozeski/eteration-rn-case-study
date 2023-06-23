@@ -1,9 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { call, takeLatest, put, all, takeEvery, spawn } from 'redux-saga/effects';
+import { call, takeLatest, put } from 'redux-saga/effects';
 import AxiosService from '@Service/index';
 import { ProductData } from '../Types/ProductType/Product';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CartStore } from '../Types/CartType/CartStore';
 
 
 const fetchProdutcsFromApi = () => {
@@ -34,34 +32,8 @@ export function* watchFetchProduct() {
     yield takeLatest('GetProduct', fetchProdutcs);
 }
 
-
-export function* fetchFavorite() {
-    const persistData: CartStore = yield call(AsyncStorage.getItem, 'persist:root');
-    console.log('persistFavoriteData', persistData);
-}
-
-export function* watchPersist() {
-    yield takeEvery('GetFavorite', fetchFavorite);
-}
-
 export function* saga() {
-    const sagas = [
-        watchFetchProduct,
-        watchPersist,
-    ];
-
-    yield all(sagas.map(d =>
-        spawn(function* () {
-            while (true) {
-                try {
-                    yield call(d)
-                    break
-                } catch (e) {
-                    console.log(e)
-                }
-            }
-        }))
-    );
+    yield call(watchFetchProduct);
 }
 
 

@@ -6,7 +6,7 @@ import productReducer from './Reducer/ProductReducer';
 import { saga } from '@Saga/saga';
 import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import FavoriteReducer from './Reducer/FavoriteReducer';
 const sagaMiddleWare = createSagaMiddleware();
 
 const persistConfig = {
@@ -14,12 +14,12 @@ const persistConfig = {
   key: 'root',
 };
 
-
-
-export const persistedReducer = persistReducer(persistConfig, cartSlice);
+export const persistReducerCart = persistReducer(persistConfig, cartSlice);
+export const persistReducerFavorite = persistReducer(persistConfig, FavoriteReducer);
 
 const rootReducer = combineReducers({
-  cart: persistedReducer,
+  cart: persistReducerCart,
+  favorite: persistReducerFavorite,
   product: productReducer,
 });
 

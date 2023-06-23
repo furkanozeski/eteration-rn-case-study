@@ -8,9 +8,9 @@ import Icon from  'react-native-vector-icons/Ionicons';
 import MIcon from  'react-native-vector-icons/MaterialCommunityIcons';
 import Cart from '@Screens/Cart';
 import Favorite from '@Screens/Favorite';
-import { useAppSelector } from '@Hooks/hooks';
 import Account from '@Screens/Account';
 import NestedNav from './NestedNav';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,8 +20,10 @@ const MemoizedFavoriteIcon = memo(({color}) => <Icon name={'ios-star-outline'} s
 const MemoizedProfileIcon = memo(({color}) => <MIcon name={'account-outline'} size={34} color={color} />);
 
 export function TabBar() {
-  const cartData = useAppSelector((state) => state.cart.totalCount);
+  const cartData = useSelector((state) => state.cart.totalCount);
+  const [badge, setBadge] = React.useState(cartData)
 
+  React.useEffect(() => {setBadge(cartData)}, [cartData])
   return (
     <Tab.Navigator
       screenOptions={{
@@ -57,7 +59,7 @@ export function TabBar() {
               fontWeight: '800',
             },
             tabBarIcon: ({ color }) => <MemoizedChartIcon color={color}/>,
-            tabBarBadge: cartData > 0 ? cartData : undefined,
+            tabBarBadge: badge > 0 ? badge : undefined,
             unmountOnBlur: true,
         }}
       />
@@ -65,8 +67,16 @@ export function TabBar() {
         name={BottomBarDestinations.Favorite.route}
         component={Favorite}
         options={{
-            headerShown: false,
-            title: undefined,
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: 'rgba(42, 89, 254, 1)',
+            },
+            title: 'E-Market',
+            headerTitleStyle: {
+              color: 'white',
+              fontSize: 29,
+              fontWeight: '800',
+            },
             tabBarIcon: ({color}) => {
               return <MemoizedFavoriteIcon color={color}/>;
             },

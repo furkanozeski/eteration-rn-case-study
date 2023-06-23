@@ -16,13 +16,11 @@ const AppExecutorContext = React.createContext<AppExecutorModel>(AppData);
 
 export const AppExecutor = ({children}: {children: React.ReactNode}) => {
     const productData = useAppSelector((state) => state.product);
-console.log(productData.length);
     const [product, setProduct] = useState<ProductData[]>(productData);
     const [isDataLoaded, setIsDataLoaded] = useState(AppData.hasInitialDataLoaded);
     const dispatch = useDispatch();
 
     useEffect(() => {
-      dispatch({type: 'GetCartPersist'});
       if (productData.length < 1) {
         dispatch({type: 'GetProduct'});
       } else {

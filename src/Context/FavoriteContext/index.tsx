@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+import { useAppDispatch, useAppSelector } from '@Hooks/hooks';
+import { SetFavorite } from '@Store/Reducer/FavoriteReducer';
 import { ProductData } from '@root/src/Types/ProductType/Product';
 import React from 'react';
 
@@ -19,16 +21,19 @@ export const FavoriteSaveContext = React.createContext<SaveProviderModel>({
 
 export const FavoriteContextProvider = ({children}: {children: React.ReactNode}) => {
   const [favorite, setFavorite] = React.useState<ProductData[]>([]);
+  const dispatch = useAppDispatch();
+  const favoriteFromStore = useAppSelector((select) => select.favorite);
 
   const removeFromFavorite = React.useCallback(
     (product: ProductData) => {
       const newFavorite = favorite.filter(e => e.id !== product.id);
       if (newFavorite !== null || newFavorite !== undefined) {
         setFavorite([...newFavorite]);
+        dispatch(SetFavorite(favorite));
       } else {
       }
     },
-    [setFavorite, favorite],
+    [setFavorite, favorite, dispatch],
   );
 
   const addToFavorite = React.useCallback(
@@ -39,9 +44,10 @@ export const FavoriteContextProvider = ({children}: {children: React.ReactNode})
         removeFromFavorite(product);
       } else {
         setFavorite([{...product}, ...favorite]);
+        // dispatch(SetFavorite(favorite));
       }
     },
-    [setFavorite, favorite, removeFromFavorite],
+    [setFavorite, favorite, removeFromFavorite,dispatch],
   );
 
 

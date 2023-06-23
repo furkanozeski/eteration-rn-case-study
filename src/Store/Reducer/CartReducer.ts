@@ -15,31 +15,29 @@ export const cartSlice = createSlice({
     initialState,
     reducers: {
         AddToCart: (state, action: PayloadAction<ProductData>) => {
-            state.totalCount += 1;
-            state.totalPrice += parseInt(action.payload.price, 10);
-            const incomingCartItem = state.products.find(e => e.id === action.payload.id);
-            if (incomingCartItem !== undefined) {
-                incomingCartItem.count += 1;
-                const indexOf = state.products.indexOf(incomingCartItem);
-                state.products.splice(indexOf, indexOf + 1, incomingCartItem);
-            } else {
-                state.products.push(action.payload);
-            }
+            const newItem = action.payload;
+            const existingItem = state.products.find(item => item.id === newItem.id);
 
-            return state;
+            if (existingItem) {
+                existingItem.count++;
+            } else {
+                state.products.push({ ...newItem, count: 1 });
+            }
+            state.totalCount++;
+            state.totalPrice += parseInt(newItem.price, 10);
         },
         RemoveFromChart: (state, action: PayloadAction<ProductData>) => {
-            const newData = state.products.find(e => e.id === action.payload.id);
-            if (newData !== undefined) {
-                newData.count -= 1;
-                const indexOf = state.products.indexOf(newData);
-                if (newData.count === 0) {
-                    state.products.splice(indexOf, indexOf + 1);
+            const item = action.payload;
+            const existingItem = state.products.find(e => e.id === item.id);
+
+            if (existingItem) {
+                if (existingItem.count === 1) {
+                state.products = state.products.filter(e => e.id !== item.id);
                 } else {
-                    state.products.splice(indexOf, indexOf + 1, newData);
+                existingItem.count--;
                 }
-                state.totalCount -= 1;
-                state.totalPrice -= parseInt(action.payload.price, 10);
+                state.totalCount--;
+                state.totalPrice -= parseInt(existingItem.price, 10);
             }
         },
         SetCartState: (state, action: PayloadAction<CartStore>) => {

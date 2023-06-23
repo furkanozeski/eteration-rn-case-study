@@ -14,6 +14,7 @@ import { FilterType } from '@root/src/Types/FilterType/FilterType';
 import { ProductData } from '@root/src/Types/ProductType/Product';
 import { FilterEnum } from '@root/src/Types/FilterType/FilterEnum';
 import { BottomBarDestinations } from '@Routes/BottomBarDestinations';
+import { Loading } from '@UIComponents/ActivityIndicatorItem';
 
 const filterDataDispatcher = (data: FilterType, product: ProductData[]): ProductData[] => {
   let sortedProduct;
@@ -74,7 +75,7 @@ const filterDataByModel = (dataTobeSorted: Set<ProductData>, product: ProductDat
   return newValue;
 };
 
-function HomeScreen({navigation}) {
+function HomeScreen({ navigation }) {
   const dispatch = useAppDispatch();
 
   const { add } = useFavoriteSave();
@@ -86,7 +87,8 @@ function HomeScreen({navigation}) {
   const [product, setProduct] = React.useState(appDataRef.current);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [sortedData, setSortedData] = useState<ProductData[]>();
-  const [searchText, setSearchText] = useState<string>('');
+  const [onEnd, setOnEnd] = useState(12);
+  const [isEnd, setIsEnd] = useState(false);
 
   React.useEffect(() => {
     if (Array.isArray(favorite) && favorite.length > 0) {
@@ -95,6 +97,7 @@ function HomeScreen({navigation}) {
         isFavorite: favorite.find((el) => el.id === data.id)?.isFavorite ?? false,
       }));
       setProduct(valueInProduct);
+      appDataRef.current = valueInProduct;
     } else {
       setProduct(appDataRef.current);
     }
@@ -107,78 +110,86 @@ function HomeScreen({navigation}) {
     }
   }, [sortedData]);
 
-  React.useEffect(() => {
-    if (searchText === '' && !Array.isArray(sortedData)) {
-      setProduct([...appDataRef.current]);
-    } else {
-      setProduct([...sortDataRef.current]);
-    }
+  const sort = React.useCallback((text: string) => {
+      if (text === '' && !Array.isArray(sortedData)) {
+        setProduct([...appDataRef.current]);
+      } else {
+        setProduct([...sortDataRef.current]);
+      }
 
-    if (searchText !== '' && Array.isArray(sortedData) && sortedData.length > 0) {
-      const newValue = [...sortedData].filter((element) => element.name.toLocaleLowerCase().includes(searchText));
-      setProduct(newValue);
-      return;
-    }
-    if (searchText !== '' && !Array.isArray(sortedData)) {
-      const newValue = [...product].filter((element) => element.name.toLocaleLowerCase().includes(searchText));
-      setProduct(newValue);
-      return;
-    }
+      if (text !== '' && Array.isArray(sortedData) && sortedData.length > 0) {
+        const newValue = [...sortedData].filter((element) => element.name.toLocaleLowerCase().includes(text));
+        setProduct(newValue);
+        return;
+      }
+      if (text !== '' && !Array.isArray(sortedData)) {
+        const newValue = [...product].filter((element) => element.name.toLocaleLowerCase().includes(text));
+        setProduct(newValue);
+        return;
+      }
+    },
+  [product, sortedData]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortedData, searchText]);
-
+  const renderItem = React.useCallback(({ item }: {item: ProductData}) => (
+    <>
+      <ProductCardItem
+        price={item.price}
+        name={item.name}
+        image={item.image}
+        isFavorite={item.isFavorite}
+        onPress={() => {
+          const newItem = {
+            ...item,
+            isFavorite: !item.isFavorite,
+          };
+          add(newItem);
+        }}
+        onAddToCard={() => {
+          dispatch(AddToCart(item));
+        }}
+        onPressToImage={() => {
+          navigation.navigate(
+            BottomBarDestinations.Home.destinations.details,
+            {
+              data: item,
+            }
+          );
+        }}
+      />
+      <View style={{ marginRight: 5 }} />
+    </>
+  ), [add, dispatch, navigation])
+console.log(onEnd);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <SearchInputBox shouldScaleViaStyle={false} onChangeText={(text) => { setSearchText(text); }} />
+      <SearchInputBox shouldScaleViaStyle={false} onChangeText={(text) => { sort(text)}} />
       <FilterItem
         onPressFilter={() => {
           setModalVisible(true);
         }}
-
       />
       <FlatList
-        data={product}
-        renderItem={({ item }) => (
-          <>
-            <ProductCardItem
-              price={item.price}
-              name={item.name}
-              image={item.image}
-              isFavorite={item.isFavorite}
-              onPress={() => {
-                const newItem = {
-                  ...item,
-                  isFavorite: !item.isFavorite,
-                };
-                add(newItem);
-              }}
-              onAddToCard={() => {
-                const newVal = {
-                  ...item,
-                  count: 1,
-                };
-                dispatch(AddToCart(newVal));
-              }}
-              onPressToImage={() => {
-                navigation.navigate(
-                  BottomBarDestinations.Home.destinations.details,
-                  {
-                    data: item,
-                  }
-                );
-              }}
-            />
-            <View style={{ marginRight: 5 }} />
-          </>
-        )}
+        data={product.slice(0, Math.min(onEnd, product.length))}
+        renderItem={renderItem}
         keyExtractor={item => item.id}
         numColumns={2}
         contentContainerStyle={{
           justifyContent: 'center',
         }}
         initialNumToRender={12}
-        maxToRenderPerBatch={12}
+        maxToRenderPerBatch={24}
+        windowSize={24}
+        onEndReached={() => {
+          const newVal = onEnd + 16;
+          if (newVal < product.length) {
+            setOnEnd(newVal);
+          } else {
+            setOnEnd(Math.min(newVal, product.length));
+            setIsEnd(true);
+          }
+        }}
+        ListFooterComponent={!isEnd ? <Loading /> : null }
+        onEndReachedThreshold={0.2}
       />
       <FilterModelComponent
         isVisible={modalVisible}
