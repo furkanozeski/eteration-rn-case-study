@@ -66,7 +66,7 @@ export const FilterModelComponent = (props: Props) => {
   }, [modelText, productData]);
 
 
-  const renderBrandList = ({ item }: { item: ProductData }) => (<FilterSortItem
+  const renderBrandList = React.useCallback(({ item }: { item: ProductData }) => (<FilterSortItem
     key={item.id}
     label={item.brand}
     isRadioButton={false}
@@ -83,9 +83,9 @@ export const FilterModelComponent = (props: Props) => {
       });
     }}
     isSelected={selectedItems.brandData.has(item)}
-  />);
+  />), [selectedItems]);
 
-  const renderModelList = ({ item }: { item: ProductData }) => (
+  const renderModelList = React.useCallback(({ item }: { item: ProductData }) => (
     <FilterSortItem
       key={item.id}
       label={item.model}
@@ -104,7 +104,29 @@ export const FilterModelComponent = (props: Props) => {
       }}
       isSelected={selectedItems.modelData.has(item)}
     />
-  );
+  ), [selectedItems]);
+
+  const renderBrandFlatList = React.useCallback(() => (
+    <FlatList
+      initialNumToRender={10}
+      maxToRenderPerBatch={12}
+      data={brand}
+      renderItem={renderBrandList}
+      keyExtractor={item => item.id}
+      style={style.flatListStyle}
+    />
+  ), [brand, renderBrandList]);
+
+  const renderModelFlatList = React.useCallback(() => (
+    <FlatList
+      initialNumToRender={10}
+      maxToRenderPerBatch={12}
+      data={model}
+      renderItem={renderModelList}
+      keyExtractor={item => item.id}
+      style={style.flatListStyle}
+    />
+  ), [model, renderModelList]);
 
   return (
     <Modal
@@ -165,15 +187,7 @@ export const FilterModelComponent = (props: Props) => {
             setBrandText(text);
           }}
         />
-        <FlatList
-          initialNumToRender={10}
-          maxToRenderPerBatch={12}
-          data={brand}
-          renderItem={renderBrandList}
-          keyExtractor={item => item.id}
-          style={style.flatListStyle}
-        />
-
+        {renderBrandFlatList()}
         <View style={style.dividerStyle} />
 
         <Text style={style.sortLabelStyle}>Model</Text>
@@ -183,14 +197,7 @@ export const FilterModelComponent = (props: Props) => {
             setModelText(text);
           }}
         />
-        <FlatList
-          initialNumToRender={10}
-          maxToRenderPerBatch={12}
-          data={model}
-          renderItem={renderModelList}
-          keyExtractor={item => item.id}
-          style={style.flatListStyle}
-        />
+        {renderModelFlatList()}
         <TouchableOpacity
           style={style.applyButtonStyle}
           onPress={() => {
