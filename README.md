@@ -11,10 +11,10 @@
 
 
 ## Secreens
-Listing Page
-Detail Page
-Favorite Page
-Cart Page
+- Listing Page
+- Detail Page
+- Favorite Page
+- Cart Page
 
 ## Features
 Persisted data by using redux/persist
