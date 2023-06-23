@@ -17,11 +17,11 @@
 - Cart Page
 
 ## Features
-Persisted data by using redux/persist
-Filtering through with Search Box and Filter modal
-Adding product to carts and as per product the badge shown and will be updated acording to quantity of the products which are in the cart
-A primitive pagination (really, expect nothing from the pagination)
-And the others in which described on the given link were completed partially successfully.
+- Persisted the data using redux/persist.
+- Implemented filtering functionality with a search box and filter modal.
+- Added products to the cart, and the badge is displayed and updated based on the quantity of products in the cart.
+- Implemented basic pagination (don't expect advanced pagination features).
+- Additionally, all the tasks described in the provided link were successfully completed (partially successfully :'( ).
 
 ## Table Of Contents
 
