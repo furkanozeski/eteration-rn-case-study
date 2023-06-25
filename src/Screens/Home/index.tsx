@@ -12,13 +12,8 @@ import { ProductData } from '@root/src/Types/ProductType/Product';
 import { HandleFavorite } from '@Store/Reducer/FavoriteReducer';
 import { Loading } from '@UIComponents/ActivityIndicatorItem';
 import { filterDataDispatcher } from './filterCase';
-import { SetProducts } from '@Store/Reducer/ProductReducer';
 import { FilterType } from '@root/src/Types/FilterType/FilterType';
 import { BottomBarDestinations } from '@Routes/BottomBarDestinations';
-
-
-
-
 
 
 function HomeScreen({navigation}) {
@@ -68,11 +63,10 @@ function HomeScreen({navigation}) {
       }));
       productDataRef.current = [...valueInProduct];
       setProduct(valueInProduct);
-      dispatch(SetProducts(valueInProduct));
     } else {
       setProduct([...productDataRef.current]);
     }
- },[favorite, product, dispatch]);
+ },[favorite, product]);
 
  const onSearchSort = React.useCallback((text: String) => {
   let searchedData;
