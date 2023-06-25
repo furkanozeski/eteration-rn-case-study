@@ -27,6 +27,7 @@ export const ProductCardItem = (props: {
             source={{ uri: image }}
             style={style.productCardItemImageStyle}
             resizeMethod="resize"
+            progressiveRenderingEnabled
           />
         </TouchableOpacity>
         <TouchableOpacity 

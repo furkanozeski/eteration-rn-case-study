@@ -15,7 +15,7 @@ export const style = StyleSheet.create({
       width: 0,
     },
     shadowRadius: 4,
-    marginLeft: 10,
+    marginHorizontal: 10,
   },
   productCardItemImageStyle: {
     minWidth: 150,
