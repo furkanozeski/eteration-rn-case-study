@@ -52,13 +52,13 @@ Due to a lack of resources, this project can only be run on Android. If you want
 
 2. When vector icons set-up done, give it a try;
 * clean locks and modules
-   ```sh
-      rm -rf yarn.lock && node_modules && package-lock.json
-    ```
+```sh
+  rm -rf yarn.lock and node_modules and package-lock.json
+```
 * link dependencies
 
 ```sh
-     cd ios && pod install && cd ..
+  cd ios && pod install && cd ..
 ```
 ## Authors
 
